@@ -13,13 +13,13 @@ import ts from 'highlight.js/lib/languages/typescript'
 import html from 'highlight.js/lib/languages/xml'
 import { useState } from 'react'
 
-import { Toggle } from './ui/toggle'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip'
+import { Toggle } from '@/components/ui/toggle'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuShortcut, DropdownMenuTrigger } from './dropdown-menu-tiptap'
-import { Button } from './ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/dropdown-menu-tiptap'
+import { Button } from '@/components/ui/button'
 import { ChevronDown, Underline as UnderlineIcon, Bold, Italic, Strikethrough, Heading1, Heading2, Heading3, Type, AlignLeft, AlignCenter, AlignRight, List, ListOrdered, Code, Copy, Check } from 'lucide-react'
-import { Skeleton } from './ui/skeleton'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const lowlight = createLowlight()
 
