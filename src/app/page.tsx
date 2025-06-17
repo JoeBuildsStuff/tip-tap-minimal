@@ -7,7 +7,7 @@ export default function Home() {
       <div className="flex justify-end p-4">
         <ModeToggle />
       </div> 
-      <div className="space-y-4 mx-4 md:mx-auto md:max-w-2xl">
+      <div className="space-y-4 mx-4 md:mx-auto md:w-2xl">
         <Tiptap />
       </div>
     </div>
