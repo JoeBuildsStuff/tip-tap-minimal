@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@plugin "@tailwindcss/typography";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -119,4 +121,109 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.ProseMirror:focus {
+  outline: none;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: hsl(var(--muted-foreground));
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Code block */
+.prose .code-block {
+  position: relative;
+}
+
+.prose .code-block select {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}
+
+pre {
+
+  font-family: 'JetBrainsMono', monospace;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+}
+
+pre code {
+  color: inherit;
+  padding: 0;
+  background: none;
+  font-size: 0.8rem;
+}
+
+pre .hljs-comment,
+pre .hljs-quote {
+  color: #8b949e;
+  font-style: italic;
+}
+
+pre .hljs-variable,
+pre .hljs-template-variable,
+pre .hljs-strong,
+pre .hljs-emphasis,
+pre .hljs-quote,
+pre .hljs-tag,
+pre .hljs-name,
+pre .hljs-link,
+pre .hljs-regexp,
+pre .hljs-deletion,
+pre .hljs-selector-id,
+pre .hljs-selector-class,
+pre .hljs-selector-attr,
+pre .re .hljs-selector-pseudo {
+  color: #f97583;
+}
+
+pre .hljs-literal,
+pre .hljs-number,
+pre .hljs-bullet,
+pre .hljs-type,
+pre .hljs-symbol,
+pre .hljs-meta,
+pre .hljs-link {
+  color: #ff7b72;
+}
+
+pre .hljs-built_in,
+pre .hljs-class .hljs-title {
+  color: #ffa657;
+}
+
+pre .hljs-string,
+pre .hljs-char,
+pre .hljs-addition,
+pre .hljs-subst {
+  color: #79c0ff;
+}
+
+pre .hljs-attr,
+pre .hljs-attribute {
+  color: #79c0ff;
+}
+
+pre .hljs-section,
+pre .hljs-title {
+  color: #d2a8ff;
+}
+
+pre .hljs-keyword,
+pre .hljs-selector-tag {
+  color: #79c0ff;
+}
+
+pre .hljs-emphasis {
+  font-style: italic;
+}
+
+pre .hljs-strong {
+  font-weight: bold;
 }
