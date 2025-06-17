@@ -28,8 +28,13 @@ lowlight.register('css', css)
 lowlight.register('js', js)
 lowlight.register('ts', ts)
 
+interface TiptapProps {
+    content?: string
+    showFixedMenu?: boolean
+    showBubbleMenu?: boolean
+}
 
-const Tiptap = () => {
+const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true }: TiptapProps) => {
   const [isCopied, setIsCopied] = useState(false)
   const editor = useEditor({
     extensions: [
@@ -45,7 +50,7 @@ const Tiptap = () => {
             lowlight,
         }),
     ],
-    content: ``,
+    content: content || ``,
     immediatelyRender: false,
   })
 
@@ -83,37 +88,39 @@ const Tiptap = () => {
   if (!editor) {
     return (
         <div className='relative border border-border rounded-md bg-card'>
-            <div className='sticky top-0 z-10 bg-card rounded-t-md border-b border-border' >
-                <div className='flex flex-row gap-1 p-2'>
-                    <div className='flex flex-row gap-0.5 w-fit'>
-                        <Button size='sm' variant='secondary' disabled>
-                            <Type className='' />
-                        </Button>
-                    </div>
-                    <div className='flex flex-row gap-0.5 w-fit'>
-                        <Button size='sm' variant='secondary' disabled>
-                            <AlignLeft className='' />
-                        </Button>
-                    </div>
-                    <div className='flex flex-row gap-0.5 w-fit'>
-                        <Toggle size='sm' disabled>
-                            <Bold className='' />
-                        </Toggle>
-                        <Toggle size='sm' disabled>
-                            <Italic className='' />
-                        </Toggle>
-                        <Toggle size='sm' disabled>
-                            <Strikethrough className='' />
-                        </Toggle>
-                        <Toggle size='sm' disabled>
-                            <UnderlineIcon className='' />
-                        </Toggle>
-                        <Toggle size='sm' disabled>
-                            <Code className='' />
-                        </Toggle>
+            {showFixedMenu && (
+                <div className='sticky top-0 z-10 bg-card rounded-t-md border-b border-border' >
+                    <div className='flex flex-row gap-1 p-2'>
+                        <div className='flex flex-row gap-0.5 w-fit'>
+                            <Button size='sm' variant='secondary' disabled>
+                                <Type className='' />
+                            </Button>
+                        </div>
+                        <div className='flex flex-row gap-0.5 w-fit'>
+                            <Button size='sm' variant='secondary' disabled>
+                                <AlignLeft className='' />
+                            </Button>
+                        </div>
+                        <div className='flex flex-row gap-0.5 w-fit'>
+                            <Toggle size='sm' disabled>
+                                <Bold className='' />
+                            </Toggle>
+                            <Toggle size='sm' disabled>
+                                <Italic className='' />
+                            </Toggle>
+                            <Toggle size='sm' disabled>
+                                <Strikethrough className='' />
+                            </Toggle>
+                            <Toggle size='sm' disabled>
+                                <UnderlineIcon className='' />
+                            </Toggle>
+                            <Toggle size='sm' disabled>
+                                <Code className='' />
+                            </Toggle>
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
             <div className='py-2 px-3 h-full'>
                 <div className='prose prose-base dark:prose-invert max-w-none'>
                     <Skeleton className='h-6 w-1/3 mb-4' />
@@ -131,7 +138,7 @@ const Tiptap = () => {
       <TooltipProvider>
 
         {/* start fixed menu */}
-        {editor && 
+        {editor && showFixedMenu && 
         <div className='sticky top-0 z-10 bg-card rounded-t-md border-b border-border' >
           <div className='flex flex-row p-2 justify-between'>
             <div className='flex flex-row gap-1'>
@@ -321,7 +328,7 @@ const Tiptap = () => {
         {/* end fixed menu */}
 
         {/* start bubble menu */}
-        {editor && (
+        {editor && showBubbleMenu && (
             <BubbleMenu
             className=""
             tippyOptions={{ duration: 100 }}
