@@ -146,8 +146,12 @@
   right: 0.5rem;
 }
 
-pre {
+.prose .code-block pre {
+  padding-top: 3.5rem;
+}
 
+.prose pre {
+  @apply bg-muted;
   font-family: 'JetBrainsMono', monospace;
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
@@ -226,4 +230,22 @@ pre .hljs-emphasis {
 
 pre .hljs-strong {
   font-weight: bold;
+}
+
+/* Custom prose styles for Tiptap */
+.prose code:not(pre > code) {
+  @apply rounded bg-background px-1.5 py-1 font-mono text-sm font-semibold text-muted-foreground;
+}
+
+.prose pre {
+  @apply whitespace-pre overflow-x-auto;
+}
+
+.prose pre code {
+  white-space: pre !important;
+}
+
+.prose code::before,
+.prose code::after {
+  content: '';
 }
