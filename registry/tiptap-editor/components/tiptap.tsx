@@ -6,13 +6,7 @@ import Underline from '@tiptap/extension-underline'
 import TextAlign from '@tiptap/extension-text-align'
 import Placeholder from '@tiptap/extension-placeholder'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
-import { createLowlight } from 'lowlight'
-import css from 'highlight.js/lib/languages/css'
-import js from 'highlight.js/lib/languages/javascript'
-import ts from 'highlight.js/lib/languages/typescript'
-import tsx from 'highlight.js/lib/languages/typescript'
-import html from 'highlight.js/lib/languages/xml'
-import bash from 'highlight.js/lib/languages/bash'
+import { createLowlight, common } from 'lowlight'
 import { useState } from 'react'
 
 import { Toggle } from '@/components/ui/toggle'
@@ -24,14 +18,7 @@ import { ChevronDown, Underline as UnderlineIcon, Bold, Italic, Strikethrough, H
 import { Skeleton } from '@/components/ui/skeleton'
 import { CodeBlock } from '@/components/code-block'
 
-const lowlight = createLowlight()
-
-lowlight.register('bash', bash)
-lowlight.register('css', css)
-lowlight.register('html', html)
-lowlight.register('js', js)
-lowlight.register('ts', ts)
-lowlight.register('tsx', tsx)
+const lowlight = createLowlight(common)
 
 const CustomCodeBlock = CodeBlockLowlight.extend({
   addNodeView() {

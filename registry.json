@@ -67,7 +67,7 @@
               "position": "relative"
             },
             ".prose .code-block pre": {
-              "padding-top": "3.5rem"
+              "padding-top": "4rem"
             },
             ".prose .code-block select": {
               "position": "absolute",

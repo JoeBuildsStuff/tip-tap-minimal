@@ -147,7 +147,7 @@
 }
 
 .prose .code-block pre {
-  padding-top: 3.5rem;
+  padding-top: 4rem;
 }
 
 .prose pre {
@@ -166,7 +166,7 @@ pre code {
 
 pre .hljs-comment,
 pre .hljs-quote {
-  color: #8b949e;
+  @apply dark:text-neutral-500 text-neutral-800;
   font-style: italic;
 }
 
@@ -184,7 +184,7 @@ pre .hljs-selector-id,
 pre .hljs-selector-class,
 pre .hljs-selector-attr,
 pre .re .hljs-selector-pseudo {
-  color: #f97583;
+  @apply dark:text-rose-300 text-rose-700;
 }
 
 pre .hljs-literal,
@@ -194,34 +194,34 @@ pre .hljs-type,
 pre .hljs-symbol,
 pre .hljs-meta,
 pre .hljs-link {
-  color: #ff7b72;
+  @apply dark:text-emerald-300 text-emerald-700;
 }
 
 pre .hljs-built_in,
 pre .hljs-class .hljs-title {
-  color: #ffa657;
+  @apply dark:text-orange-200 text-orange-700;
 }
 
 pre .hljs-string,
 pre .hljs-char,
 pre .hljs-addition,
 pre .hljs-subst {
-  color: #79c0ff;
+  @apply dark:text-blue-300 text-blue-700;
 }
 
 pre .hljs-attr,
 pre .hljs-attribute {
-  color: #79c0ff;
+  @apply dark:text-blue-300 text-blue-700;
 }
 
 pre .hljs-section,
 pre .hljs-title {
-  color: #d2a8ff;
+  @apply dark:text-purple-300 text-purple-700;
 }
 
 pre .hljs-keyword,
 pre .hljs-selector-tag {
-  color: #79c0ff;
+  @apply dark:text-blue-300 text-blue-700 ;
 }
 
 pre .hljs-emphasis {
@@ -242,6 +242,7 @@ pre .hljs-strong {
 }
 
 .prose pre code {
+  @apply text-muted-foreground;
   white-space: pre !important;
 }
 

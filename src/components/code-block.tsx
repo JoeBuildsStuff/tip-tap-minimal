@@ -18,6 +18,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { Separator } from '@/components/ui/separator'
 
 export function CodeBlock(props: NodeViewProps) {
   const [isCopied, setIsCopied] = useState(false)
@@ -41,7 +42,7 @@ export function CodeBlock(props: NodeViewProps) {
         defaultValue={props.node.attrs.language || 'plaintext'}
         onValueChange={handleLanguageChange}
       >
-        <SelectTrigger className="absolute left-2 top-2 w-[120px] border-none bg-transparent shadow-none" >
+        <SelectTrigger className="absolute left-2 top-2 w-fit border-none bg-transparent shadow-none" >
           <SelectValue placeholder="Language" />
         </SelectTrigger>
         <SelectContent>
@@ -58,13 +59,13 @@ export function CodeBlock(props: NodeViewProps) {
             <Button
               size="icon"
               variant="ghost"
-              className="absolute right-2 top-2 size-6"
+              className="absolute right-2 top-3.5 size-6"
               onClick={handleCopy}
             >
               {isCopied ? (
-                <Check className="size-3" />
+                <Check className="size-4" />
               ) : (
-                <Copy className="size-3" />
+                <Copy className="size-4" />
               )}
             </Button>
           </TooltipTrigger>
@@ -73,6 +74,7 @@ export function CodeBlock(props: NodeViewProps) {
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
+      <Separator className='absolute top-13 left-0 right-0' />
       <pre>
         <NodeViewContent as="code" />
       </pre>
