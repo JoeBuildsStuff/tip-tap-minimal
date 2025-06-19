@@ -58,7 +58,9 @@ export const Settings = ({
   return (
     <Sheet>
         <SheetTrigger>
+          <Button variant="ghost">
             <Settings2 className="w-4 h-4" />
+          </Button>
         </SheetTrigger>
         <SheetContent className="w-[400px] sm:w-[540px]">
             <SheetHeader>
