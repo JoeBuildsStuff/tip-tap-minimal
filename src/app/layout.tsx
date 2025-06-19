@@ -17,6 +17,44 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Simple Text Editor",
   description: "A simple text editor built with Tiptap, Shadcn/UI, Lucide Icons, Lowlight and Next.js",
+  
+  // Open Graph meta tags for social media sharing
+  openGraph: {
+    title: "Simple Text Editor",
+    description: "A simple text editor built with Tiptap, Shadcn/UI, Lucide Icons, Lowlight and Next.js",
+    url: "https://tip-tap-minimal.vercel.app/",
+    siteName: "Simple Text Editor",
+    images: [
+      {
+        url: "/og-image.png", // This should be a 1200x630px image in your public folder
+        width: 939,
+        height: 630,
+        alt: "Simple Text Editor - Rich text editing made easy",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  
+  // Twitter Card meta tags
+  twitter: {
+    card: "summary_large_image",
+    title: "Simple Text Editor",
+    description: "A simple text editor built with Tiptap, Shadcn/UI, Lucide Icons, Lowlight and Next.js",
+    images: ["/og-image.png"], // Same image as Open Graph
+    creator: "@JoeTaylor_86753", // Replace with your Twitter handle (optional)
+  },
+  
+  // Additional meta tags
+  robots: {
+    index: true,
+    follow: true,
+  },
+  
+  // Favicon and other icons
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
