@@ -342,7 +342,13 @@ const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true }: Tiptap
                             <DropdownMenu modal={false}>
                                 <DropdownMenuTrigger asChild>
                                     <Button size='sm' className='text-xs' variant='ghost'>
-                                        {editor.isActive('heading', { level: 1 }) ? <Heading1 className='h-4 w-4' /> : editor.isActive('heading', { level: 2 }) ? <Heading2 className='h-4 w-4' /> : editor.isActive('codeBlock') ? <Code className='h-4 w-4' /> : <Type className='h-4 w-4' />}
+                                        {editor.isActive('heading', { level: 1 }) && <Heading1 className='h-4 w-4' />}
+                                        {editor.isActive('heading', { level: 2 }) && <Heading2 className='h-4 w-4' />}
+                                        {editor.isActive('heading', { level: 3 }) && <Heading3 className='h-4 w-4' />}
+                                        {editor.isActive('orderedList') && <ListOrdered className='h-4 w-4' />}
+                                        {editor.isActive('bulletList') && <List className='h-4 w-4' />}
+                                        {editor.isActive('codeBlock') && <Code className='h-4 w-4' />}
+                                        {!editor.isActive('heading', { level: 1 }) && !editor.isActive('heading', { level: 2 }) && !editor.isActive('heading', { level: 3 }) && !editor.isActive('orderedList') && !editor.isActive('bulletList') && !editor.isActive('codeBlock') && <Type className='h-4 w-4' />}
                                         <ChevronDown className='h-4 w-4 text-muted-foreground' />
                                     </Button>
                                 </DropdownMenuTrigger>
