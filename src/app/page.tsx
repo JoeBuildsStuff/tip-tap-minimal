@@ -69,7 +69,7 @@ export default function Home() {
     <div className="flex flex-col h-screen">
       <div className="flex justify-end p-4 gap-0">
         <Button variant="ghost" asChild>
-          <Link href="https://github.com/JoeBuildsStuff/tip-tap-minimal">
+          <Link href="https://github.com/JoeBuildsStuff/tip-tap-minimal" target="_blank" rel="noopener noreferrer">
             <GitHubIcon className="size-4" />
           </Link>
         </Button>
