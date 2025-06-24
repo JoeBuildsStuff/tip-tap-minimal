@@ -7,16 +7,16 @@ import TextAlign from '@tiptap/extension-text-align'
 import Placeholder from '@tiptap/extension-placeholder'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import { createLowlight, common } from 'lowlight'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { Toggle } from '@/components/ui/toggle'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/dropdown-menu-tiptap'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/tiptap/dropdown-menu-tiptap'
 import { Button } from '@/components/ui/button'
 import { ChevronDown, Underline as UnderlineIcon, Bold, Italic, Strikethrough, Heading1, Heading2, Heading3, Type, AlignLeft, AlignCenter, AlignRight, List, ListOrdered, Code, Copy, Check } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
-import { CodeBlock } from '@/components/code-block'
+import { CodeBlock } from '@/components/tiptap/code-block'
 
 const lowlight = createLowlight(common)
 
@@ -30,9 +30,10 @@ interface TiptapProps {
     content?: string
     showFixedMenu?: boolean
     showBubbleMenu?: boolean
+    onChange?: (content: string) => void
 }
 
-const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true }: TiptapProps) => {
+const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, onChange }: TiptapProps) => {
   const [isCopied, setIsCopied] = useState(false)
   const editor = useEditor({
     extensions: [
@@ -50,7 +51,23 @@ const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true }: Tiptap
     ],
     content: content || ``,
     immediatelyRender: false,
+    onUpdate: ({ editor }) => {
+      if (onChange) {
+        onChange(editor.getHTML())
+      }
+    }
   })
+
+  useEffect(() => {
+    if (editor) {
+      const editorContent = editor.getHTML()
+      // Compare the content and update only if it's different.
+      // This prevents an infinite loop.
+      if (content !== editorContent) {
+        editor.commands.setContent(content || '', false)
+      }
+    }
+  }, [content, editor])
 
   const handleCopy = () => {
     if (!editor) {
@@ -87,7 +104,7 @@ const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true }: Tiptap
     return (
         <div className='relative border border-border rounded-md bg-card'>
             {showFixedMenu && (
-                <div className='sticky top-0 z-10 bg-card rounded-t-md border-b border-border' >
+                <div className='bg-card rounded-t-md border-b border-border' >
                     <div className='flex flex-row gap-1 p-2'>
                         <div className='flex flex-row gap-0.5 w-fit'>
                             <Button size='sm' variant='secondary' disabled>
@@ -137,7 +154,7 @@ const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true }: Tiptap
 
         {/* start fixed menu */}
         {editor && showFixedMenu && 
-        <div className='sticky top-0 z-10 bg-card rounded-t-md border-b border-border' >
+        <div className='bg-card rounded-t-md border-b border-border' >
           <div className='flex flex-row p-2 justify-between'>
             <div className='flex flex-row gap-1'>
                 {/* type of node */}
@@ -507,8 +524,8 @@ const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true }: Tiptap
         {/* end bubble menu */}
 
         {/* start editor */}
-        <div className='py-2 px-3 h-full'>
-            <EditorContent editor={editor} className='prose prose-base dark:prose-invert max-w-none' />
+        <div className='py-2 px-3 prose prose-base dark:prose-invert max-w-none'>
+            <EditorContent editor={editor} className='' />
         </div>
         {/* end editor */}
 
