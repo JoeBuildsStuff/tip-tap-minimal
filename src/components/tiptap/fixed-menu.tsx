@@ -24,6 +24,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/tiptap/dropdown-menu-tiptap'
 import { Button } from '@/components/ui/button'
 import { LinkButton } from '@/components/tiptap/link-button'
+import TableButton from '@/components/tiptap/table-button'
 import { useState } from 'react'
 
 interface FixedMenuProps {
@@ -259,6 +260,7 @@ const FixedMenu = ({ editor }: FixedMenuProps) => {
                             </TooltipContent>
                         </Tooltip>
                         <LinkButton editor={editor} size='sm' />
+                        <TableButton editor={editor} size='sm' />
                     </div>
                 </div>
                 <div className='flex flex-row gap-1'>

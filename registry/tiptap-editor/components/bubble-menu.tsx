@@ -24,6 +24,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/tiptap/dropdown-menu-tiptap'
 import { Button } from '@/components/ui/button'
 import { LinkButton } from '@/components/tiptap/link-button'
+import TableButton from './table-button'
 
 interface BubbleMenuProps {
     editor: Editor
@@ -229,6 +230,7 @@ const BubbleMenuComponent = ({ editor }: BubbleMenuProps) => {
                     </TooltipContent>
                 </Tooltip>
                 <LinkButton editor={editor} size='sm' className='text-xs' />
+                <TableButton editor={editor} size='sm' className='text-xs' />
             </div>
         </TiptapBubbleMenu>
     )

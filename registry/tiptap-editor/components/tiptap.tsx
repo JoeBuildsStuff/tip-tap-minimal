@@ -4,9 +4,13 @@ import { useEditor, EditorContent, ReactNodeViewRenderer } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { Underline } from '@tiptap/extension-underline'
 import { TextAlign } from '@tiptap/extension-text-align'
-import { Placeholder } from '@tiptap/extensions'
+import { Placeholder, Gapcursor } from '@tiptap/extensions'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import { Link } from '@tiptap/extension-link'
+import { TableKit } from '@tiptap/extension-table'
+import { TableRow } from '@tiptap/extension-table/row'
+import { TableCell } from '@tiptap/extension-table/cell'
+import { TableHeader } from '@tiptap/extension-table/header'
 import { createLowlight, common } from 'lowlight'
 import { useEffect } from 'react'
 
@@ -61,6 +65,13 @@ const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, onChange
             defaultProtocol: 'https',
             protocols: ['http', 'https'],
         }),
+        TableKit.configure({
+          table: { resizable: true },
+        }),
+        TableRow,
+        TableCell,
+        TableHeader,
+        Gapcursor,
     ],
     content: content || ``,
     immediatelyRender: false,
