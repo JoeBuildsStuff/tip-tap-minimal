@@ -12,6 +12,8 @@ import { TableRow } from '@tiptap/extension-table/row'
 import { TableCell } from '@tiptap/extension-table/cell'
 import { TableHeader } from '@tiptap/extension-table/header'
 import { DragHandle } from '@tiptap/extension-drag-handle-react'
+import Image from '@tiptap/extension-image'
+import { FileNode } from '@/components/tiptap/file-node'
 import { createLowlight, common } from 'lowlight'
 import { useEffect, useState } from 'react'
 
@@ -32,6 +34,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { CodeBlock } from '@/components/tiptap/code-block'
 import FixedMenu from '@/components/tiptap/fixed-menu'
 import BubbleMenuComponent from '@/components/tiptap/bubble-menu'
+import { createFileHandlerConfig } from '@/components/tiptap/file-handler'
 
 const lowlight = createLowlight(common)
 const CustomCodeBlock = CodeBlockLowlight.extend({
@@ -46,9 +49,10 @@ interface TiptapProps {
     showBubbleMenu?: boolean
     showDragHandle?: boolean
     onChange?: (content: string) => void
+    onFileDrop?: (files: File[]) => void
 }
 
-const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, showDragHandle = true, onChange }: TiptapProps) => {
+const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, showDragHandle = true, onChange, onFileDrop }: TiptapProps) => {
   // Track the currently selected node for drag handle functionality
   const [selectedNode, setSelectedNode] = useState<{ type: { name: string } } | null>(null)
 
@@ -78,6 +82,12 @@ const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, showDrag
         TableCell,
         TableHeader,
         Gapcursor,
+        Image.configure({
+          inline: true,
+          allowBase64: true,
+        }),
+        FileNode,
+        createFileHandlerConfig({ onFileDrop }),
     ],
     content: content || ``,
     immediatelyRender: false,
