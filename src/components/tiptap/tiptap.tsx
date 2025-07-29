@@ -1,6 +1,6 @@
 'use client'
 
-import { useEditor, EditorContent, ReactNodeViewRenderer, Editor } from '@tiptap/react'
+import { useEditor, EditorContent, ReactNodeViewRenderer } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { Underline } from '@tiptap/extension-underline'
 import { TextAlign } from '@tiptap/extension-text-align'
@@ -8,7 +8,7 @@ import { Placeholder } from '@tiptap/extensions'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import { Link } from '@tiptap/extension-link'
 import { createLowlight, common } from 'lowlight'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { TooltipProvider } from '@/components/ui/tooltip'
 import {
@@ -19,7 +19,6 @@ import {
     Code,
     Type,
     AlignLeft,
-    X
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Toggle } from '@/components/ui/toggle'
@@ -28,16 +27,12 @@ import { CodeBlock } from '@/components/tiptap/code-block'
 import FixedMenu from '@/components/tiptap/fixed-menu'
 import BubbleMenuComponent from '@/components/tiptap/bubble-menu'
 
-
 const lowlight = createLowlight(common)
-
 const CustomCodeBlock = CodeBlockLowlight.extend({
   addNodeView() {
     return ReactNodeViewRenderer(CodeBlock)
   },
 })
-
-
 
 interface TiptapProps {
     content?: string
