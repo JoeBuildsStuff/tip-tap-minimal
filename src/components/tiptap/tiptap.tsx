@@ -1,10 +1,11 @@
 'use client'
 
-import { useEditor, EditorContent, BubbleMenu, ReactNodeViewRenderer } from '@tiptap/react'
+import { useEditor, EditorContent, ReactNodeViewRenderer } from '@tiptap/react'
+import { BubbleMenu } from '@tiptap/react/menus'
 import StarterKit from '@tiptap/starter-kit'
-import Underline from '@tiptap/extension-underline'
-import TextAlign from '@tiptap/extension-text-align'
-import Placeholder from '@tiptap/extension-placeholder'
+import { Underline } from '@tiptap/extension-underline'
+import { TextAlign } from '@tiptap/extension-text-align'
+import { Placeholder } from '@tiptap/extensions'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import { createLowlight, common } from 'lowlight'
 import { useState, useEffect } from 'react'
@@ -64,7 +65,7 @@ const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, onChange
       // Compare the content and update only if it's different.
       // This prevents an infinite loop.
       if (content !== editorContent) {
-        editor.commands.setContent(content || '', false)
+        editor.commands.setContent(content || '', { emitUpdate: false })
       }
     }
   }, [content, editor])
@@ -346,7 +347,10 @@ const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, onChange
         {editor && showBubbleMenu && (
             <BubbleMenu
             className=""
-            tippyOptions={{ duration: 100 }}
+            options={{
+              offset: 6,
+              placement: 'top',
+            }}
             editor={editor}
             shouldShow={({ editor }) => {
                 const { from, to } = editor.state.selection
