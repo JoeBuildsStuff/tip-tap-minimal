@@ -1,7 +1,7 @@
 'use client'
 
 import { Editor, useEditorState } from '@tiptap/react'
-import { ArrowLeftToLine, ArrowUpToLine, ArrowRightToLine, ArrowDownToLine, Grid2x2Plus, Grid2x2X, BetweenVerticalEnd, Columns3Cog, BetweenHorizonalStart, FoldHorizontal, SquareSplitHorizontal, FoldVertical } from 'lucide-react'
+import { ArrowLeftToLine, ArrowUpToLine, ArrowRightToLine, ArrowDownToLine, Grid2x2Plus, Grid2x2X, Columns3Cog, BetweenHorizonalStart, FoldHorizontal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { 
     Popover,

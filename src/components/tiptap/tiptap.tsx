@@ -11,8 +11,9 @@ import { TableKit } from '@tiptap/extension-table'
 import { TableRow } from '@tiptap/extension-table/row'
 import { TableCell } from '@tiptap/extension-table/cell'
 import { TableHeader } from '@tiptap/extension-table/header'
+import { DragHandle } from '@tiptap/extension-drag-handle-react'
 import { createLowlight, common } from 'lowlight'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { TooltipProvider } from '@/components/ui/tooltip'
 import {
@@ -23,6 +24,7 @@ import {
     Code,
     Type,
     AlignLeft,
+    GripVertical,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Toggle } from '@/components/ui/toggle'
@@ -42,10 +44,14 @@ interface TiptapProps {
     content?: string
     showFixedMenu?: boolean
     showBubbleMenu?: boolean
+    showDragHandle?: boolean
     onChange?: (content: string) => void
 }
 
-const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, onChange }: TiptapProps) => {
+const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, showDragHandle = true, onChange }: TiptapProps) => {
+  // Track the currently selected node for drag handle functionality
+  const [selectedNode, setSelectedNode] = useState<{ type: { name: string } } | null>(null)
+
   const editor = useEditor({
     extensions: [
         StarterKit,
@@ -165,8 +171,27 @@ const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, onChange
                 {showBubbleMenu && <BubbleMenuComponent editor={editor} />}
                 {/* end bubble menu */}
 
+                {/* start drag handle */}
+                {showDragHandle && (
+                  <DragHandle
+                    editor={editor}
+                    onNodeChange={({ node, pos }) => {
+                      setSelectedNode(node)
+                      // You can add custom logic here to highlight the selected node
+                      if (node) {
+                        console.log('Selected node:', node.type.name, 'at position:', pos, 'selectedNode:', selectedNode)
+                      }
+                    }}
+                  >
+                    <div className="flex items-center justify-center w-4 h-8 mr-1 hover:bg-muted/80 rounded cursor-grab active:cursor-grabbing transition-colors">
+                      <GripVertical className="size-4 text-muted-foreground/70" />
+                    </div>
+                  </DragHandle>
+                )}
+                {/* end drag handle */}
+
                 {/* start editor */}
-                <div className='py-2 px-3 prose prose-base dark:prose-invert max-w-none'>
+                <div className='py-2 px-6 prose prose-base dark:prose-invert max-w-none'>
                     <EditorContent 
                         editor={editor} 
                         className='[&_a:hover]:cursor-pointer' 
