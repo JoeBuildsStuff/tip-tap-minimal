@@ -1,13 +1,14 @@
 'use client'
 
-import { useEditor, EditorContent, ReactNodeViewRenderer } from '@tiptap/react'
+import { useEditor, EditorContent, ReactNodeViewRenderer, Editor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { Underline } from '@tiptap/extension-underline'
 import { TextAlign } from '@tiptap/extension-text-align'
 import { Placeholder } from '@tiptap/extensions'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+import { Link } from '@tiptap/extension-link'
 import { createLowlight, common } from 'lowlight'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { TooltipProvider } from '@/components/ui/tooltip'
 import {
@@ -17,7 +18,8 @@ import {
     Underline as UnderlineIcon,
     Code,
     Type,
-    AlignLeft
+    AlignLeft,
+    X
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Toggle } from '@/components/ui/toggle'
@@ -26,6 +28,7 @@ import { CodeBlock } from '@/components/tiptap/code-block'
 import FixedMenu from '@/components/tiptap/fixed-menu'
 import BubbleMenuComponent from '@/components/tiptap/bubble-menu'
 
+
 const lowlight = createLowlight(common)
 
 const CustomCodeBlock = CodeBlockLowlight.extend({
@@ -33,6 +36,8 @@ const CustomCodeBlock = CodeBlockLowlight.extend({
     return ReactNodeViewRenderer(CodeBlock)
   },
 })
+
+
 
 interface TiptapProps {
     content?: string
@@ -55,12 +60,29 @@ const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, onChange
         CustomCodeBlock.configure({
             lowlight,
         }),
+        Link.configure({
+            openOnClick: false,
+            autolink: true,
+            defaultProtocol: 'https',
+            protocols: ['http', 'https'],
+        }),
     ],
     content: content || ``,
     immediatelyRender: false,
     onUpdate: ({ editor }) => {
       if (onChange) {
         onChange(editor.getHTML())
+      }
+    },
+    editorProps: {
+      handleKeyDown: (_view, event) => {
+        // Handle Cmd+K (or Ctrl+K) for link
+        if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
+          event.preventDefault()
+          // Note: Link functionality is now handled by LinkButton components
+          return true
+        }
+        return false
       }
     }
   })
@@ -139,7 +161,10 @@ const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, onChange
 
                 {/* start editor */}
                 <div className='py-2 px-3 prose prose-base dark:prose-invert max-w-none'>
-                    <EditorContent editor={editor} className='' />
+                    <EditorContent 
+                        editor={editor} 
+                        className='[&_a:hover]:cursor-pointer' 
+                    />
                 </div>
                 {/* end editor */}
 

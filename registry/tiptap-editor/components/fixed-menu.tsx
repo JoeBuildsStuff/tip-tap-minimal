@@ -17,12 +17,13 @@ import {
     AlignCenter,
     AlignRight,
     Copy,
-    Check
+    Check,
 } from 'lucide-react'
 import { Toggle } from '@/components/ui/toggle'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/tiptap/dropdown-menu-tiptap'
 import { Button } from '@/components/ui/button'
+import { LinkButton } from '@/components/tiptap/link-button'
 import { useState } from 'react'
 
 interface FixedMenuProps {
@@ -257,6 +258,7 @@ const FixedMenu = ({ editor }: FixedMenuProps) => {
                                 <p>Inline code <span className='ml-2'>⌘E</span></p>
                             </TooltipContent>
                         </Tooltip>
+                        <LinkButton editor={editor} size='sm' />
                     </div>
                 </div>
                 <div className='flex flex-row gap-1'>
