@@ -7,27 +7,30 @@ import { TextAlign } from '@tiptap/extension-text-align'
 import { Placeholder, Gapcursor } from '@tiptap/extensions'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import { Link } from '@tiptap/extension-link'
-import { TableKit } from '@tiptap/extension-table'
+import { Table } from '@tiptap/extension-table'
 import { TableRow } from '@tiptap/extension-table/row'
 import { TableCell } from '@tiptap/extension-table/cell'
 import { TableHeader } from '@tiptap/extension-table/header'
 import { DragHandle } from '@tiptap/extension-drag-handle-react'
-import Image from '@tiptap/extension-image'
 import { FileNode } from '@/components/tiptap/file-node'
 import { createLowlight, common } from 'lowlight'
 import { useEffect, useState } from 'react'
+import { TiptapProps } from './types'
+import { Image } from '@tiptap/extension-image'
+import { CustomImageView } from './custom-image-view'
+import { deleteFile } from './supabase-file-manager'
 
 import { TooltipProvider } from '@/components/ui/tooltip'
 import {
-    Bold,
-    Italic,
     Strikethrough,
-    Underline as UnderlineIcon,
-    Code,
     Type,
     AlignLeft,
     GripVertical,
 } from 'lucide-react'
+import { BoldIcon } from '@/components/icons/bold'
+import { ItalicIcon } from '@/components/icons/italic'
+import { UnderlineIcon } from '@/components/icons/underline'
+import { ChevronsLeftRightIcon } from '@/components/icons/chevrons-left-right'
 import { Button } from '@/components/ui/button'
 import { Toggle } from '@/components/ui/toggle'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -43,18 +46,18 @@ const CustomCodeBlock = CodeBlockLowlight.extend({
   },
 })
 
-interface TiptapProps {
-    content?: string
-    showFixedMenu?: boolean
-    showBubbleMenu?: boolean
-    showDragHandle?: boolean
-    onChange?: (content: string) => void
-    onFileDrop?: (files: File[]) => void
-}
-
-const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, showDragHandle = true, onChange, onFileDrop }: TiptapProps) => {
+const Tiptap = ({ 
+  content, 
+  showFixedMenu = true, 
+  showBubbleMenu = true, 
+  showDragHandle = true, 
+  onChange, 
+  onFileDrop,
+  fileUploadConfig,
+  enableFileNodes = true
+}: TiptapProps) => {
   // Track the currently selected node for drag handle functionality
-  const [selectedNode, setSelectedNode] = useState<{ type: { name: string } } | null>(null)
+  const [, setSelectedNode] = useState<{ type: { name: string } } | null>(null)
 
   const editor = useEditor({
     extensions: [
@@ -64,7 +67,7 @@ const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, showDrag
             types: ['heading', 'paragraph'],
         }),
         Placeholder.configure({
-            placeholder: 'Write something…',
+            placeholder:'Write something…',
         }),
         CustomCodeBlock.configure({
             lowlight,
@@ -75,22 +78,55 @@ const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, showDrag
             defaultProtocol: 'https',
             protocols: ['http', 'https'],
         }),
-        TableKit.configure({
-          table: { resizable: true },
+        Table.configure({
+          resizable: true,
         }),
         TableRow,
         TableCell,
         TableHeader,
         Gapcursor,
-        Image.configure({
+        ...(enableFileNodes ? [
+          createFileHandlerConfig({ 
+            onFileDrop,
+            fileUploadConfig: fileUploadConfig ? {
+              supabaseBucket: fileUploadConfig.supabaseBucket,
+              pathPrefix: fileUploadConfig.pathPrefix,
+              maxFileSize: fileUploadConfig.maxFileSize,
+              allowedMimeTypes: fileUploadConfig.allowedMimeTypes
+            } : undefined
+          })
+        ] : []),
+        
+        Image.extend({
+          addNodeView() {
+            return ReactNodeViewRenderer(CustomImageView)
+          },
+        }).configure({
           inline: true,
-          allowBase64: true,
+          allowBase64: false, // Always false - we store file paths, not base64
+          HTMLAttributes: {
+            class: 'tiptap-image',
+          }
         }),
-        FileNode,
-        createFileHandlerConfig({ onFileDrop }),
+        ...(enableFileNodes ? [
+          FileNode
+        ] : [])
     ],
     content: content || ``,
     immediatelyRender: false,
+    onDelete(params: { type: string; node?: { type: { name: string }; attrs?: { src?: string } }; [key: string]: unknown }) {
+      // Handle cleanup of deleted image and file nodes
+      const { type, node } = params
+      if (type === 'node' && node?.attrs?.src) {
+        const src = node.attrs.src
+        // Only cleanup Supabase file paths, not external URLs
+        if (typeof src === 'string' && !src.startsWith('http') && !src.startsWith('data:')) {
+          deleteFile(src).catch((error: unknown) => {
+            console.error('Failed to cleanup deleted file:', error)
+          })
+        }
+      }
+    },
     onUpdate: ({ editor }) => {
       if (onChange) {
         onChange(editor.getHTML())
@@ -105,7 +141,7 @@ const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, showDrag
           return true
         }
         return false
-      }
+      },
     }
   })
 
@@ -115,7 +151,7 @@ const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, showDrag
       // Compare the content and update only if it's different.
       // This prevents an infinite loop.
       if (content !== editorContent) {
-        editor.commands.setContent(content || '', { emitUpdate: false })
+        editor.commands.setContent((content as string) || '', { emitUpdate: false })
       }
     }
   }, [content, editor])
@@ -139,10 +175,10 @@ const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, showDrag
                         </div>
                         <div className='flex flex-row gap-0.5 w-fit'>
                             <Toggle size='sm' disabled>
-                                <Bold className='' />
+                                <BoldIcon className='' />
                             </Toggle>
                             <Toggle size='sm' disabled>
-                                <Italic className='' />
+                                <ItalicIcon className='' />
                             </Toggle>
                             <Toggle size='sm' disabled>
                                 <Strikethrough className='' />
@@ -151,7 +187,7 @@ const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, showDrag
                                 <UnderlineIcon className='' />
                             </Toggle>
                             <Toggle size='sm' disabled>
-                                <Code className='' />
+                                <ChevronsLeftRightIcon className='' />
                             </Toggle>
                         </div>
                     </div>
@@ -170,11 +206,15 @@ const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, showDrag
 
     // Editor
     return (
-        <div className='relative border border-border rounded-md bg-card'>
+        <div className='relative border border-border rounded-md bg-card h-full flex flex-col'>
             <TooltipProvider>
 
                 {/* start fixed menu */}
-                {showFixedMenu && <FixedMenu editor={editor} />}
+                {showFixedMenu && (
+                    <div className='sticky top-0 z-10 bg-card/80 backdrop-blur-lg rounded-lg'>
+                        <FixedMenu editor={editor} />
+                    </div>
+                )}
                 {/* end fixed menu */}
 
                 {/* start bubble menu */}
@@ -185,11 +225,11 @@ const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, showDrag
                 {showDragHandle && (
                   <DragHandle
                     editor={editor}
-                    onNodeChange={({ node, pos }) => {
+                    onNodeChange={({ node }) => {
                       setSelectedNode(node)
                       // You can add custom logic here to highlight the selected node
                       if (node) {
-                        console.log('Selected node:', node.type.name, 'at position:', pos, 'selectedNode:', selectedNode)
+                        // console.log('Selected node:', node.type.name)
                       }
                     }}
                   >
@@ -201,10 +241,10 @@ const Tiptap = ({ content, showFixedMenu = true, showBubbleMenu = true, showDrag
                 {/* end drag handle */}
 
                 {/* start editor */}
-                <div className='py-2 px-6 prose prose-base dark:prose-invert max-w-none'>
+                <div className='h-full flex-1 overflow-y-auto py-2 px-6 prose prose-base dark:prose-invert max-w-none'>
                     <EditorContent 
                         editor={editor} 
-                        className='[&_a:hover]:cursor-pointer' 
+                        className='[&_a:hover]:cursor-pointer h-full flex-1' 
                     />
                 </div>
                 {/* end editor */}

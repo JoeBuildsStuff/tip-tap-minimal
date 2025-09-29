@@ -2,11 +2,7 @@
 
 import { Editor, useEditorState } from '@tiptap/react'
 import {
-    Bold,
-    Italic,
     Strikethrough,
-    Underline as UnderlineIcon,
-    Code,
     Heading1,
     Heading2,
     Heading3,
@@ -16,24 +12,24 @@ import {
     AlignLeft,
     AlignCenter,
     AlignRight,
-    Copy,
-    Check,
 } from 'lucide-react'
+import { BoldIcon } from '@/components/icons/bold'
+import { ItalicIcon } from '@/components/icons/italic'
+import { UnderlineIcon } from '@/components/icons/underline'
+import { ChevronsLeftRightIcon } from '@/components/icons/chevrons-left-right'
 import { Toggle } from '@/components/ui/toggle'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/tiptap/dropdown-menu-tiptap'
 import { Button } from '@/components/ui/button'
 import { LinkButton } from '@/components/tiptap/link-button'
 import TableButton from '@/components/tiptap/table-button'
-import { useState } from 'react'
+import { CopyButton } from '@/components/ui/copy-button'
 
 interface FixedMenuProps {
     editor: Editor
 }
 
 const FixedMenu = ({ editor }: FixedMenuProps) => {
-    const [isCopied, setIsCopied] = useState(false)
-
     const editorState = useEditorState({
         editor,
         selector: (state: { editor: Editor }) => ({
@@ -54,34 +50,14 @@ const FixedMenu = ({ editor }: FixedMenuProps) => {
         }),
     })
 
-    const handleCopy = () => {
-        if (!editor) {
-            return
-        }
+    const getContentToCopy = () => {
+        if (!editor) return ''
+        
         const htmlContent = editor.getHTML()
         const textContent = editor.getText()
-
-        navigator.clipboard.write([
-            new ClipboardItem({
-                'text/html': new Blob([htmlContent], { type: 'text/html' }),
-                'text/plain': new Blob([textContent], { type: 'text/plain' })
-            })
-        ]).then(() => {
-            setIsCopied(true)
-            setTimeout(() => {
-                setIsCopied(false)
-            }, 2000)
-        }).catch(err => {
-            console.error('Failed to copy rich text, falling back to plain text.', err)
-            navigator.clipboard.writeText(textContent).then(() => {
-                setIsCopied(true)
-                setTimeout(() => {
-                    setIsCopied(false)
-                }, 2000)
-            }).catch(err => {
-                console.error('Failed to copy plain text.', err)
-            })
-        })
+        
+        // Return HTML content if it's different from plain text, otherwise return plain text
+        return htmlContent !== textContent ? htmlContent : textContent
     }
     
     return (
@@ -100,7 +76,7 @@ const FixedMenu = ({ editor }: FixedMenuProps) => {
                                             {editorState.isHeading3 && <Heading3 className='' />}
                                             {editorState.isOrderedList && <ListOrdered className='' />}
                                             {editorState.isBulletList && <List className='' />}
-                                            {editorState.isCodeBlock && <Code className='' />}
+                                            {editorState.isCodeBlock && <ChevronsLeftRightIcon className='' />}
                                             {!editorState.isHeading1 && !editorState.isHeading2 && !editorState.isHeading3 && !editorState.isOrderedList && !editorState.isBulletList && !editorState.isCodeBlock && <Type className='' />}
                                         </Button>
                                     </DropdownMenuTrigger>
@@ -136,7 +112,7 @@ const FixedMenu = ({ editor }: FixedMenuProps) => {
                                             <DropdownMenuShortcut>⌘ ⇧ 8</DropdownMenuShortcut>
                                         </DropdownMenuItem>
                                         <DropdownMenuItem onClick={() => editor.chain().focus().toggleCodeBlock().run()}>
-                                            <Code className='' />
+                                            <ChevronsLeftRightIcon className='' />
                                             <span className='text-xs'>Code block</span>
                                             <DropdownMenuShortcut>⌘ ⌥ C</DropdownMenuShortcut>
                                         </DropdownMenuItem>
@@ -196,7 +172,7 @@ const FixedMenu = ({ editor }: FixedMenuProps) => {
                                     pressed={editorState.isBold}
                                     size='sm'
                                 >
-                                    <Bold className='' />
+                                    <BoldIcon className='' />
                                 </Toggle>
                             </TooltipTrigger>
                             <TooltipContent>
@@ -210,7 +186,7 @@ const FixedMenu = ({ editor }: FixedMenuProps) => {
                                     pressed={editorState.isItalic}
                                     size='sm'
                                 >
-                                    <Italic className='' />
+                                    <ItalicIcon className='' />
                                 </Toggle>
                             </TooltipTrigger>
                             <TooltipContent>
@@ -252,7 +228,7 @@ const FixedMenu = ({ editor }: FixedMenuProps) => {
                                     pressed={editorState.isCode}
                                     size='sm'
                                 >
-                                    <Code className='' />
+                                    <ChevronsLeftRightIcon className='' />
                                 </Toggle>
                             </TooltipTrigger>
                             <TooltipContent>
@@ -264,9 +240,16 @@ const FixedMenu = ({ editor }: FixedMenuProps) => {
                     </div>
                 </div>
                 <div className='flex flex-row gap-1'>
-                    <Button size='sm' variant='ghost' className='text-xs' onClick={handleCopy}>
-                        {isCopied ? <Check className='' /> : <Copy className='' />}
-                    </Button>
+                    <CopyButton
+                        textToCopy={getContentToCopy()}
+                        size='sm'
+                        variant='ghost'
+                        className='text-xs'
+                        tooltipText='Copy content'
+                        tooltipCopiedText='Copied!'
+                        successMessage='Content copied to clipboard'
+                        errorMessage='Failed to copy content'
+                    />
                 </div>
             </div>
         </div>
