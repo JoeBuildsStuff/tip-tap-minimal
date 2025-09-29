@@ -13,7 +13,7 @@ import {
 import { FileNodeAttributes } from './file-node'
 import { XIcon } from '../icons/x'
 import { DownloadIcon } from '../icons/download'
-import Spinner from '../ui/spinner'
+import Spinner from '@/components/ui/spinner'
 
 export const FileNodeView = ({ node, updateAttributes, deleteNode, selected }: ReactNodeViewProps) => {
   const attrs = node.attrs as FileNodeAttributes
